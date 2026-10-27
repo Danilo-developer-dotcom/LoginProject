@@ -1,3 +1,5 @@
+from src.dbManager import DbManager
+
 def menu():
     while True:
         print("Login")
@@ -8,6 +10,8 @@ def menu():
         senha = str(input("Digite sua senha >> "))
         print(f"Bem vindo, {email.split("@")[0]}!")
         break
+
+dbManager = DbManager()
 
 print("Bem vindo!\nJá possui cadastro?")
 cadastrar = str(input("(Sim/Não) >> "))
