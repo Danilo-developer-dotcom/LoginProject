@@ -10,3 +10,9 @@ class DbManager:
                             email TEXT NOT NULL,
                             senha TEXT NOT NULL)''')
         self.conn.commit()
+
+    def insert(self, parametros: tuple):
+        self.cursor.execute("insert into usuarios (nome, email, senha) values (?, ?, ?)",
+                            parametros)
+        self.conn.commit()
+
