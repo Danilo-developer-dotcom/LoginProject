@@ -60,4 +60,5 @@ cadastrar = str(input("(Sim/Não) >> "))
 if cadastrar.lower() == "sim":
     menu()
 elif cadastrar.lower() == "nao":
-    cadastro()
+    usuario = cadastro()
+    dbManager.create(usuario)
