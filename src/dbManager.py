@@ -16,5 +16,7 @@ class DbManager:
                             parametros)
         self.conn.commit()
 
-    def read(self):
-        pass
+    def select_dado(self, dado, coluna="*", where="*"):
+        self.cursor.execute(f"select {coluna} from usuarios WHERE {where} = '{dado}'")
+        return self.cursor.fetchall()
+

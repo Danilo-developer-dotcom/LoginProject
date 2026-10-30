@@ -1,5 +1,14 @@
 from src.dbManager import DbManager
 
+def acesso(informado, coluna, onde=None):
+    if not onde:
+        onde = coluna
+    dado = dbManager.select_dado(informado, coluna, where=onde)
+    if dado:
+        return dado[0][0]
+    else:
+        return False
+
 def menu():
     while True:
         print("Login")
@@ -7,8 +16,21 @@ def menu():
         if "@" not in email and "." not in email:
             print("e-mail inválido")
             continue
+        else:
+            email_cadastrado = acesso(email, "email")
+            if not email_cadastrado:
+                print("e-mail inválido")
+                continue
+            print(email_cadastrado)
         senha = str(input("Digite sua senha >> "))
-        print(f"Bem vindo, {email.split("@")[0]}!")
+        senha_cadastrada = acesso(email, "senha", onde="email")
+        if senha != senha_cadastrada:
+            #print("Senha inválida")
+            print(senha)
+            print(senha_cadastrada)
+        else:
+            nome = acesso(email, "nome", onde="email")
+            print(f"Seja muito bem vindo(a), {nome}")
         break
 
 def confirma(mensagem):
