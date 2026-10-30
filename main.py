@@ -22,16 +22,24 @@ def menu():
                 print("e-mail inválido")
                 continue
             print(email_cadastrado)
-        senha = str(input("Digite sua senha >> "))
-        senha_cadastrada = acesso(email, "senha", onde="email")
-        if senha != senha_cadastrada:
-            #print("Senha inválida")
-            print(senha)
-            print(senha_cadastrada)
-        else:
-            nome = acesso(email, "nome", onde="email")
-            print(f"Seja muito bem vindo(a), {nome}")
-        break
+        for i in range(5, 0, -1):
+            senha = str(input("Digite sua senha >> "))
+            senha_cadastrada = acesso(email, "senha", onde="email")
+            if senha != senha_cadastrada and  i> 1:
+                print(f"Senha inválida, mais {i-1} tentativas")
+                continue
+
+            elif senha == senha_cadastrada:
+                nome = acesso(email, "nome", onde="email")
+                print(f"Seja muito bem vindo(a), {nome}")
+                return True
+
+            else:
+                print("O número de tentativas foi excedido")
+                break
+
+        return False
+
 
 def confirma(mensagem):
     print(mensagem)
@@ -77,10 +85,16 @@ def cadastro() -> tuple:
 #Cria/acessa o Banco de Dados e a tabela de usuarios
 dbManager = DbManager()
 
-print("Bem vindo!\nJá possui cadastro?")
-cadastrar = str(input("(Sim/Não) >> "))
-if cadastrar.lower() == "sim":
-    menu()
-elif cadastrar.lower() == "nao":
-    usuario = cadastro()
-    dbManager.create(usuario)
+while True:
+    print("Bem vindo!\nJá possui cadastro?")
+    cadastrar = str(input("(Sim/Não) >> "))
+    if cadastrar.lower() == "sim":
+        login = menu()
+        if not login:
+            continue
+        else:
+            print("Agenda")
+
+    elif cadastrar.lower() == "nao":
+        usuario = cadastro()
+        dbManager.create(usuario)
