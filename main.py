@@ -19,21 +19,21 @@ def menu():
             continue
         else:
             email_cadastrado = acesso(email, "email")
+            id: int = acesso(email, "id", onde="email")
             if not email_cadastrado:
                 print("e-mail inválido")
                 continue
-            print(email_cadastrado)
         for i in range(5, 0, -1):
             senha = str(input("Digite sua senha >> "))
             __hash = sha256(senha.encode('utf-8')).hexdigest()
-            senha_cadastrada = acesso(email, "senha", onde="email")
+            senha_cadastrada = acesso(id, "senha", onde="id")
             if __hash != senha_cadastrada and  i> 1:
                 print(f"Senha inválida, mais {i-1} tentativas")
                 continue
 
             elif __hash == senha_cadastrada:
                 print(senha_cadastrada)
-                nome = acesso(email, "nome", onde="email")
+                nome = acesso(id, "nome", onde="id")
                 print(f"Seja muito bem vindo(a), {nome}")
                 return True
 
