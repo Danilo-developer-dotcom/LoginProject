@@ -1,5 +1,7 @@
 from src.dbManager import DbManager
+from src.emailManager import EmailManager
 from hashlib import sha256
+from random import randint
 
 def acesso(informado, coluna, onde=None):
     if not onde:
@@ -52,23 +54,28 @@ def confirma(mensagem):
     elif resposta.lower() == "sim":
         return True
 
-def cadastro() -> tuple:
+def cadastro() -> tuple | False:
     while True:
         nome = str(input("Digite seu nome\n>> "))
         check = confirma(f"O nome digitado foi: {nome}, esse nome está certo?")
         if check:
             break
-        else:
-            continue
+        else: continue
     while True:
         email = str(input("Digite seu e-mail:\n>> "))
         if "@" not in email and "." not in email:
             print("e-mail inválido")
             continue
         else:
-            check = confirma(f"O e-mail digitado foi {email}, esse email está certo?")
+            check = confirma(f"Será enviado um número de verificação para o email:\n{email}\nEsse email está certo?")
             if check:
-                break
+                verificador = randint(1000, 9999)
+                email_v.enviar(email, verificador)
+                verificar = int(input("Digite o Número recebido no seu e-mail:\n>> "))
+                if verificar != verificador:
+                    print("Código incorreto! Verifique se o E-mail está correto e tente novamente.")
+                    return False
+                else: break
             else:
                 continue
     while True:
@@ -88,6 +95,7 @@ def cadastro() -> tuple:
 
 #Cria/acessa o Banco de Dados e a tabela de usuarios
 dbManager = DbManager()
+email_v = EmailManager()
 
 while True:
     print("Bem vindo!\nJá possui cadastro?")
@@ -101,4 +109,7 @@ while True:
 
     elif cadastrar.lower() == "nao":
         usuario = cadastro()
-        dbManager.create(usuario)
+        if not usuario:
+            continue
+        else:
+            dbManager.create(usuario)
