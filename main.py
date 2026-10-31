@@ -54,7 +54,7 @@ def confirma(mensagem):
     elif resposta.lower() == "sim":
         return True
 
-def cadastro() -> tuple | False:
+def cadastro() -> tuple | bool:
     while True:
         nome = str(input("Digite seu nome\n>> "))
         check = confirma(f"O nome digitado foi: {nome}, esse nome está certo?")
