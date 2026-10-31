@@ -34,7 +34,6 @@ def menu():
                 continue
 
             elif __hash == senha_cadastrada:
-                print(senha_cadastrada)
                 nome = acesso(id, "nome", onde="id")
                 print(f"Seja muito bem vindo(a), {nome}")
                 return True
