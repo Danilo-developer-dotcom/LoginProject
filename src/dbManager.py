@@ -4,11 +4,18 @@ class DbManager:
     def __init__(self):
         self.conn = sqlite3.connect("Login.db")
         self.cursor = self.conn.cursor()
+        self.cursor.execute('''PRAGMA foreign_keys = ON;''')
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             nome TEXT NOT NULL,
                             email TEXT NOT NULL UNIQUE,
                             senha TEXT NOT NULL)''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS agendamento(
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            data TEXT NOT NULL UNIQUE,
+                            usuario_id INTEGER,
+                            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+                            )''')
         self.conn.commit()
 
     def create(self, parametros: tuple):
@@ -19,4 +26,5 @@ class DbManager:
     def select_dado(self, dado, coluna="*", where="*"):
         self.cursor.execute(f"select {coluna} from usuarios WHERE {where} = '{dado}'")
         return self.cursor.fetchall()
+
 
