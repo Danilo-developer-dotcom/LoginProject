@@ -18,12 +18,12 @@ class DbManager:
                             )''')
         self.conn.commit()
 
-    def create(self, parametros: tuple):
+    def create_usuario(self, parametros: tuple):
         self.cursor.execute("insert into usuarios (nome, email, senha) values (?, ?, ?)",
                             parametros)
         self.conn.commit()
 
-    def select_dado(self, dado, coluna="*", where="*"):
+    def select_acesso(self, dado, coluna="*", where="*"):
         self.cursor.execute(f"select {coluna} from usuarios WHERE {where} = '{dado}'")
         return self.cursor.fetchall()
 

@@ -6,7 +6,7 @@ from random import randint
 def acesso(informado, coluna, onde=None):
     if not onde:
         onde = coluna
-    dado = dbManager.select_dado(informado, coluna, where=onde)
+    dado = dbManager.select_acesso(informado, coluna, where=onde)
     if dado:
         return dado[0][0]
     else:
@@ -111,4 +111,4 @@ while True:
         if not usuario:
             continue
         else:
-            dbManager.create(usuario)
+            dbManager.create_usuario(usuario)
