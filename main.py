@@ -2,6 +2,8 @@ from src.dbManager import DbManager
 from src.emailManager import EmailManager
 from hashlib import sha256
 from random import randint
+from src.agendaManager import AgendaManager
+import sys
 
 def acesso(informado, coluna, onde=None):
     if not onde:
@@ -21,22 +23,22 @@ def menu():
             continue
         else:
             email_cadastrado = acesso(email, "email")
-            id: int = acesso(email, "id", onde="email")
+            user_id: int = acesso(email, "id", onde="email")
             if not email_cadastrado:
                 print("e-mail inválido")
                 continue
         for i in range(5, 0, -1):
             senha = str(input("Digite sua senha >> "))
             __hash = sha256(senha.encode('utf-8')).hexdigest()
-            senha_cadastrada = acesso(id, "senha", onde="id")
+            senha_cadastrada = acesso(user_id, "senha", onde="id")
             if __hash != senha_cadastrada and  i> 1:
                 print(f"Senha inválida, mais {i-1} tentativas")
                 continue
 
             elif __hash == senha_cadastrada:
-                nome = acesso(id, "nome", onde="id")
+                nome = acesso(user_id, "nome", onde="id")
                 print(f"Seja muito bem vindo(a), {nome}")
-                return True
+                return user_id
 
             else:
                 print("O número de tentativas foi excedido")
@@ -104,7 +106,51 @@ while True:
         if not login:
             continue
         else:
-            print("Agenda")
+            while True:
+                agenda = AgendaManager(login)
+                print("O que deseja fazer?")
+                print("1 - Consultar meus agendamentos")
+                print("2 - Agendar uma data")
+                print("3 - Consultar disponibilidade")
+                print("4 - Sair")
+
+                escolha = int(input(">> "))
+                match escolha:
+                    case 1:
+                        agendados = agenda.meus_agendamentos()
+                        for i in agendados:
+                            for j in i:
+                                print(j)
+                    case 2:
+                        while True:
+                            print("Insira a data no formato DD/MM/AAAA")
+                            print("Digite o dia:")
+                            dia = int(input(">> "))
+                            if dia > 31:
+                                print("Dia inválido")
+                                continue
+                            print("Digite o mes:")
+                            mes = int(input(">> "))
+                            if mes > 12:
+                                print("Mes inválido")
+                                continue
+                            elif (mes in [4, 6, 9, 11] and dia == 31) or (mes == 2 and dia > 28):
+                                if mes != 2:
+                                    print(f"O mês {mes} possui apenas 30 dias")
+                                else:
+                                    print("O mês 2 posssui apenas 28 dias")
+                                    continue
+                            print("Digite o ano:")
+                            ano = int(input(">> "))
+                            data = f"{dia}/{mes}/{ano}"
+                            agendar = agenda.marcar_data(data)
+                            if not agendar:
+                                print(f"Não foi possível realizar o agendamento para o dia: {data}")
+                            break
+                    case 4:
+                        sys.exit()
+
+
 
     elif cadastrar.lower() == "nao":
         usuario = cadastro()

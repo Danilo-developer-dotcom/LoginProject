@@ -24,7 +24,22 @@ class DbManager:
         self.conn.commit()
 
     def select_acesso(self, dado, coluna="*", where="*"):
-        self.cursor.execute(f"select {coluna} from usuarios WHERE {where} = '{dado}'")
+        self.cursor.execute(f"select {coluna} from usuarios WHERE {where} = (?)", (dado,))
         return self.cursor.fetchall()
+
+    def select_meus_agendamentos(self, usuario_id):
+        self.cursor.execute('''SELECT data FROM agendamento
+        INNER JOIN usuarios ON agendamento.usuario_id = usuarios.id
+        WHERE (usuarios.id) = ? ''', (int(usuario_id),))
+        return self.cursor.fetchall()
+
+    def agendar(self, data, usuario_id):
+        try:
+            self.cursor.execute('''INSERT INTO agendamento (data, usuario_id) values (?, ?)''', (data, usuario_id))
+            self.conn.commit()
+            return True
+        except Exception as e:
+            print("Erro:", e)
+            return False
 
 
