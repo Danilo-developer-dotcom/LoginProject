@@ -3,7 +3,7 @@ from src.emailManager import EmailManager
 from hashlib import sha256
 from src.agendaManager import AgendaManager
 import sys
-from src.utils import cadastro, acesso
+from src.utils import cadastro, acesso, calendario, confirma
 
 #Cria/acessa o Banco de Dados e a tabela de usuarios
 dbManager = DbManager()
@@ -12,16 +12,15 @@ login = 0
 
 #Acesso ao Sistema
 while login == 0:
-    print("Bem vindo!\nJá possui cadastro?")
-    cadastrar = str(input("(Sim/Não) >> "))
-    if cadastrar.lower() == "nao":
+    cadastrado = confirma("Bem vindo!\nJá possui cadastro?")
+    if not cadastrado:
         usuario = cadastro()
         if not usuario:
             continue
         else:
             dbManager.create_usuario(usuario)
 
-    elif cadastrar.lower() == "sim":
+    elif cadastrado:
         print("Login")
         email = str(input("Digite seu e-mail >> "))
         if "@" not in email and "." not in email:
@@ -57,8 +56,7 @@ while True:
     print("O que deseja fazer?")
     print("1 - Consultar meus agendamentos")
     print("2 - Agendar uma data")
-    print("3 - Consultar disponibilidade")
-    print("4 - Sair")
+    print("3 - Sair")
 
     escolha = int(input(">> "))
     match escolha:
@@ -69,31 +67,20 @@ while True:
             continue
 
         case 2:
-            while True:
-                print("Insira a data no formato DD/MM/AAAA")
-                print("Digite o dia:")
-                dia = int(input(">> "))
-                if dia > 31:
-                    print("Dia inválido")
+            data = calendario()
+            disponibilidade = agenda.consultar_disponibilidade(data)
+            if disponibilidade:
+                print("Data indisponível")
+                continue
+            else:
+                print(f"Data {data} disponível para agendamento, deseja agendar?")
+                if not confirma(">> "):
                     continue
-                print("Digite o mes:")
-                mes = int(input(">> "))
-                if mes > 12:
-                    print("Mes inválido")
-                    continue
-                elif (mes in [4, 6, 9, 11] and dia == 31) or (mes == 2 and dia > 28):
-                    if mes != 2:
-                        print(f"O mês {mes} possui apenas 30 dias")
-                    else:
-                        print("O mês 2 posssui apenas 28 dias")
-                        continue
-                print("Digite o ano:")
-                ano = int(input(">> "))
-                data = f"{dia}/{mes}/{ano}"
-                agendar = agenda.marcar_data(data)
-                if not agendar:
-                    print(f"Não foi possível realizar o agendamento para o dia: {data}")
-                break
-        case 4:
+
+            agendar = agenda.marcar_data(data)
+            if not agendar:
+                print(f"Não foi possível realizar o agendamento para o dia: {data}")
+            continue
+        case 3:
             print("Encerrando Sistema...")
             sys.exit()

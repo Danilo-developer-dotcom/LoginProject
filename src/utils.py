@@ -56,3 +56,26 @@ def acesso(informado, coluna, onde=None):
         return dado[0][0]
     else:
         return False
+
+def calendario():
+    while True:
+        print("Insira a data no formato DD/MM/AAAA")
+        print("Digite o dia:")
+        dia = int(input(">> "))
+        if dia > 31:
+            print("Dia inválido")
+            continue
+        print("Digite o mes:")
+        mes = int(input(">> "))
+        if mes > 12:
+            print("Mes inválido")
+            continue
+        elif (mes in [4, 6, 9, 11] and dia == 31) or (mes == 2 and dia > 28):
+            if mes != 2:
+                print(f"O mês {mes} possui apenas 30 dias")
+            else:
+                print("O mês 2 posssui apenas 28 dias")
+                continue
+        print("Digite o ano:")
+        ano = int(input(">> "))
+        return f"{dia}/{mes}/{ano}"

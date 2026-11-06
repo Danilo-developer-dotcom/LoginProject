@@ -42,4 +42,7 @@ class DbManager:
             print("Erro:", e)
             return False
 
+    def verificar(self, data):
+        self.cursor.execute('''SELECT id FROM agendamento WHERE data = (?)''', (data,))
+        return self.cursor.fetchall()
 

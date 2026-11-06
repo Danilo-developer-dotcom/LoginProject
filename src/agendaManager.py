@@ -15,5 +15,9 @@ class AgendaManager:
     def marcar_data(self, data):
         return self.dbManager.agendar(data, self.usuario_id)
 
-    def consultar_disponibilidade(self):
-        pass
+    def consultar_disponibilidade(self, data):
+        try:
+            return self.dbManager.verificar(data)
+
+        except Exception as e:
+            print(f"Erro ao consultar disponibilidade:", e)
