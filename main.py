@@ -19,28 +19,29 @@ while login == 0:
             continue
         else:
             dbManager.create_usuario(usuario)
+            continue
 
     elif cadastrado:
         print("Login")
         email = str(input("Digite seu e-mail >> "))
-        if "@" not in email and "." not in email:
+        if "@" not in email or "." not in email:
             print("e-mail inválido")
             continue
         else:
             email_cadastrado = acesso(email, "email")
-            user_id: int = acesso(email, "id", onde="email")
             if not email_cadastrado:
                 print("e-mail inválido")
                 continue
+            user_id: int = acesso(email, "id", onde="email")
         for i in range(5, 0, -1):
             senha = str(input("Digite sua senha >> "))
-            __hash = sha256(senha.encode('utf-8')).hexdigest()
+            hash = sha256(senha.encode('utf-8')).hexdigest()
             senha_cadastrada = acesso(user_id, "senha", onde="id")
-            if __hash != senha_cadastrada and i > 1:
+            if hash != senha_cadastrada and i > 1:
                 print(f"Senha inválida, mais {i - 1} tentativas")
-                continue
+                sys.exit()
 
-            elif __hash == senha_cadastrada:
+            elif hash == senha_cadastrada:
                 nome = acesso(user_id, "nome", onde="id")
                 print(f"Seja muito bem vindo(a), {nome}")
                 login = user_id
